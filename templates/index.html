@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThreatIQ - Malware Analysis System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <span class="nav-title">MalDetect</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link active">Home</a>
+                <a href="{{ url_for('project') }}" class="nav-link">Project</a>
+                <a href="{{ url_for('team') }}" class="nav-link">Team</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">Contact us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Check your executable file</h1>
+                <p class="hero-subtitle">Try our deep learning model to test whether your file is malicious or benign</p>
+                <button class="hero-btn" onclick="openAnalyzer()">TEST YOUR FILE</button>
+            </div>
+            <div class="hero-image">
+                <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Laptop -->
+                    <rect x="50" y="150" width="300" height="180" rx="10" fill="#E5E7EB"/>
+                    <rect x="60" y="160" width="280" height="160" rx="5" fill="#1F2937"/>
+                    <rect x="70" y="170" width="260" height="140" rx="3" fill="#111827"/>
+                    <!-- Screen glow -->
+                    <rect x="70" y="170" width="260" height="140" rx="3" fill="url(#screenGlow)" opacity="0.3"/>
+                    <!-- Bug/Shield icon on screen -->
+                    <g transform="translate(180, 220)">
+                        <circle cx="20" cy="20" r="25" fill="#DC2626" opacity="0.2"/>
+                        <path d="M20 5L15 10L20 15L25 10L20 5Z" fill="#DC2626"/>
+                        <circle cx="20" cy="25" r="8" fill="#DC2626"/>
+                        <path d="M12 25L28 25M20 17L20 33" stroke="#DC2626" stroke-width="2"/>
+                    </g>
+                    <!-- Magnifying glass -->
+                    <g transform="translate(280, 120)">
+                        <circle cx="15" cy="15" r="12" stroke="#8B5CF6" stroke-width="3" fill="none"/>
+                        <path d="m25 25 l8 8" stroke="#8B5CF6" stroke-width="3"/>
+                        <circle cx="15" cy="15" r="6" fill="#8B5CF6" opacity="0.2"/>
+                    </g>
+                    <!-- Floating particles -->
+                    <circle cx="100" cy="100" r="3" fill="#8B5CF6" opacity="0.6">
+                        <animate attributeName="cy" values="100;90;100" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="320" cy="80" r="2" fill="#EC4899" opacity="0.6">
+                        <animate attributeName="cy" values="80;70;80" dur="2.5s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="80" cy="60" r="2.5" fill="#10B981" opacity="0.6">
+                        <animate attributeName="cy" values="60;50;60" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <defs>
+                        <linearGradient id="screenGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </main>
+
+    <!-- Analysis Modal -->
+    <div class="modal" id="analysisModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>File Analysis</h2>
+                <button class="modal-close" onclick="closeAnalyzer()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-section">
+                    <input type="file" id="fileInput" accept="*">
+                    <label for="fileInput" class="upload-btn">Choose File</label>
+                    <p class="file-info" id="fileInfo"></p>
+                    <button class="analyze-btn" id="analyzeBtn" disabled onclick="analyzeFile()">Analyze File</button>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing file... Please wait</p>
+                </div>
+                
+                <div class="result" id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('analysisModal');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+
+        // Modal functions
+        function openAnalyzer() {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAnalyzer() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetAnalyzer();
+        }
+
+        function resetAnalyzer() {
+            fileInput.value = '';
+            fileInfo.textContent = '';
+            analyzeBtn.disabled = true;
+            loading.style.display = 'none';
+            result.style.display = 'none';
+        }
+
+        // Close modal on outside click
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeAnalyzer();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const sizeKB = (file.size / 1024).toFixed(2);
+                fileInfo.textContent = `Selected: ${file.name} (${sizeKB} KB)`;
+                analyzeBtn.disabled = false;
+            } else {
+                fileInfo.textContent = '';
+                analyzeBtn.disabled = true;
+            }
+        });
+
+        // Analyze file
+        async function analyzeFile() {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            analyzeBtn.disabled = true;
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+
+                displayResult(data);
+
+            } catch (error) {
+                alert('Error analyzing file: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        function displayResult(data) {
+            const rfMalicious = data.rf_malicious_probability ?? 0;
+            const rfBenign = data.rf_benign_probability ?? 0;
+            const lstmMalicious = data.lstm_malicious_probability ?? 0;
+            const lstmBenign = data.lstm_benign_probability ?? 0;
+            const combinedMalicious = data.combined_malicious_probability ?? 0;
+            const combinedBenign = data.combined_benign_probability ?? 0;
+
+            const isMalicious = combinedMalicious >= combinedBenign;
+            result.className = 'result ' + (isMalicious ? 'malicious' : 'benign');
+
+            const featuresHtml = Object.entries(data.features || {})
+                .map(([key, value]) => `
+                    <div class="feature-item">
+                        <strong>${formatFeatureName(key)}</strong>
+                        <span>${formatValue(value)}</span>
+                    </div>
+                `).join('');
+
+            result.innerHTML = `
+                <h2>${isMalicious ? '⚠️ MALICIOUS DETECTED' : '✅ FILE IS BENIGN'}</h2>
+                
+                <div class="result-meta">
+                    <p><strong>File:</strong> ${data.filename}</p>
+                    <p><strong>Analysis Time:</strong> ${data.timestamp}</p>
+                </div>
+
+                <h3>Model Probabilities</h3>
+                <div class="probability-section">
+                    <div class="prob-item">
+                        <strong>Random Forest</strong><br>
+                        Malicious: ${rfMalicious.toFixed(1)}%<br>
+                        Benign: ${rfBenign.toFixed(1)}%
+                    </div>
+                    <div class="prob-item">
+                        <strong>LSTM</strong><br>
+                        Malicious: ${lstmMalicious.toFixed(1)}%<br>
+                        Benign: ${lstmBenign.toFixed(1)}%
+                    </div>
+                    <div class="prob-item">
+                        <strong>Combined</strong><br>
+                        Malicious: ${combinedMalicious.toFixed(1)}%<br>
+                        Benign: ${combinedBenign.toFixed(1)}%
+                    </div>
+                </div>
+
+                <h3>Extracted Features</h3>
+                <div class="feature-grid">
+                    ${featuresHtml}
+                </div>
+
+                <div class="action-buttons">
+                    <button onclick="resetAnalyzer()" class="btn-primary">Analyze Another</button>
+                </div>
+            `;
+
+            result.style.display = 'block';
+        }
+
+        function formatFeatureName(name) {
+            return name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatValue(value) {
+            if (typeof value === 'number') {
+                return value % 1 === 0 ? value : value.toFixed(2);
+            }
+            return value;
+        }
+    </script>
+</body>
+</html>
+   

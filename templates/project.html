@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThreatIQ - Project Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <span class="nav-title">MalDetect</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('project') }}" class="nav-link active">Project</a>
+                <a href="{{ url_for('team') }}" class="nav-link">Team</a>
+                <a href="{{ url_for('contact') }}" class="nav-link">Contact us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="hero-container">
+            <h1 class="page-title">ThreatIQ</h1>
+            <p class="page-subtitle">AI-powered cybersecurity tool for detecting malicious executables.</p>
+            <p class="page-tagline">Built using Machine Learning, Python, and Flask.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="page-content">
+        <!-- Overview Section -->
+        <section class="content-section">
+            <h2>System Overview</h2>
+            <p>Our Malware Detection System analyzes executable files (.exe, .dll) to determine whether they are malicious or benign. It leverages static analysis and deep learning models to ensure accuracy and security in threat detection.</p>
+            
+            <div class="process-flow">
+                <div class="flow-step">
+                    <div class="flow-icon">📁</div>
+                    <span>File Upload</span>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">🔍</div>
+                    <span>Feature Extraction</span>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">🧠</div>
+                    <span>ML Models</span>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-icon">📊</div>
+                    <span>Classification</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technologies Section -->
+        <section class="content-section">
+            <h2>Technologies Used</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">🐍</div>
+                    <span>Python</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🌶️</div>
+                    <span>Flask</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🤖</div>
+                    <span>scikit-learn</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🧠</div>
+                    <span>TensorFlow</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🌐</div>
+                    <span>HTML/CSS</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">⚡</div>
+                    <span>JavaScript</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Details Section -->
+        <section class="content-section">
+            <h2>Model Architecture</h2>
+            <div class="model-grid">
+                <div class="model-card">
+                    <div class="model-icon">🌳</div>
+                    <h3>Random Forest</h3>
+                    <p>Trained on static binary and metadata features for fast prediction with high accuracy.</p>
+                </div>
+                <div class="model-card">
+                    <div class="model-icon">🔗</div>
+                    <h3>LSTM Model</h3>
+                    <p>Learns sequential opcode behavior patterns for deep detection of sophisticated threats.</p>
+                </div>
+                <div class="model-card">
+                    <div class="model-icon">⚡</div>
+                    <h3>Combined Model</h3>
+                    <p>Blends both approaches for superior accuracy (≈95% on test data) and robust detection.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dataset Section -->
+        <section class="content-section">
+            <h2>Training Dataset</h2>
+            <p>The models were trained on a balanced dataset of benign and malicious executables collected from open malware repositories and academic research datasets. This ensures comprehensive coverage of threat patterns and legitimate software behaviors.</p>
+        </section>
+
+        <!-- Demo Section -->
+        <section class="content-section">
+            <h2>Live Demo</h2>
+            <div class="demo-placeholder">
+                <div class="demo-icon">🚀</div>
+                <h3>Interactive Analysis Available</h3>
+                <p>Experience our malware detection system in action on the home page.</p>
+                <a href="{{ url_for('index') }}" class="demo-btn">Try Demo</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <p>© 2025 Malware Detection Project</p>
+    </footer>
+</body>
+</html>
